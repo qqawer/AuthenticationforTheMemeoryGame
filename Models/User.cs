@@ -12,12 +12,12 @@ namespace AuthenticationforTheMemeoryGame.Models
         [Required]
         [MaxLength(50)]
         [Column(TypeName = "nvarchar(50)")]
-        public string Username { get; set; }
+        public string Username { get; set; }=string.Empty; 
 
         [Required]
         [MaxLength(256)]
         [Column(TypeName = "nvarchar(256)")]
-        public string Password { get; set; }
+        public string Password { get; set; }=string.Empty;
 
         [Required]
         [Column(TypeName = "bit")]
