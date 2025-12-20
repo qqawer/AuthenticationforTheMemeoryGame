@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using AuthenticationforTheMemeoryGame.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 namespace AuthenticationforTheMemeoryGame.Data
 {
     public class AppDbContext:DbContext
