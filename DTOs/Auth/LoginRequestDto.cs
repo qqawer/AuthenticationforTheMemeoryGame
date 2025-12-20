@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AuthenticationforTheMemeoryGame.DTOs.Ads
+namespace AuthenticationforTheMemeoryGame.DTOs.Auth
 {
-    public class LoginRequest
+    public class LoginRequestDto
     {
         [Required(ErrorMessage ="Username is required")]
         [MaxLength(50)]
