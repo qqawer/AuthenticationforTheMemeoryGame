@@ -37,9 +37,6 @@ namespace AuthenticationforTheMemeoryGame.Data
                 .IsDescending(false, true);// CompletionTimeSeconds ascending, CompleteAt descending
 
 
-
-
-
         }
     }
 }
