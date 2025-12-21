@@ -22,7 +22,13 @@ namespace AuthenticationforTheMemeoryGame.Controllers
         public async Task<IActionResult> GetActiveAds()
         {
             var ads = await _adService.GetActiveAdsAsync();
-            return Ok(ads);
+            var response = new
+            {
+                Code = 200,
+                Message = "Active ads retrieved successfully.",
+                Data= ads
+            };
+            return Ok(response);
         }
     }
 }
