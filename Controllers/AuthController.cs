@@ -1,4 +1,5 @@
-﻿using AuthenticationforTheMemeoryGame.DTOs.Auth;
+﻿using AuthenticationforTheMemeoryGame.DTOs;
+using AuthenticationforTheMemeoryGame.DTOs.Auth;
 using AuthenticationforTheMemeoryGame.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,12 +20,15 @@ namespace AuthenticationforTheMemeoryGame.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequest)
         {
-            var response = await _authService.LoginAsync(loginRequest);
-            if (response.IsSuccess)
+            
+            var result = await _authService.LoginAsync(loginRequest);
+            return Ok(new ApiResponse<LoginResponseDto>
             {
-               return Ok(response);
-            }
-            return BadRequest(response);
+                Code= 200,
+                Message ="Login successful.",
+                Data=result
+            });
+           
         }
     }
 }

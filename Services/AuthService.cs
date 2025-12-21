@@ -20,28 +20,18 @@ namespace AuthenticationforTheMemeoryGame.Services
 
             if (string.IsNullOrEmpty(loginRequest.Username) || string.IsNullOrEmpty(loginRequest.Password))
             {
-                return new LoginResponseDto
-                {
-                    IsSuccess = false,
-                    Message = "Username and Password cannot be empty"
-                };
+                throw new ArgumentException("Username and Password cannot be empty");
             }
             //query user from database and validate credentials here
             var user = await _dbContext.Users
                 .FirstOrDefaultAsync(u => u.Username == loginRequest.Username && u.Password == loginRequest.Password);
             if (user == null)
             {
-                return new LoginResponseDto
-                {
-                    IsSuccess = false,
-                    Message = "Invalid username or password"
-                };
+                throw new UnauthorizedAccessException("Invalid username or password");
             }
             var token=_tokenService.GenerateToken(user);
             return new LoginResponseDto
             {
-                IsSuccess = true,
-                Message = "Login successful",
                 Token = token
             };
         }
