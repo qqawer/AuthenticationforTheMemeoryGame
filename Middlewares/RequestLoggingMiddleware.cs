@@ -1,6 +1,10 @@
-﻿using System.Diagnostics; // For timing 
+﻿using System.Diagnostics;
+
 namespace AuthenticationforTheMemeoryGame.Middlewares
 {
+    /// <summary>
+    /// Middleware to log details of incoming requests and outgoing responses, including execution time.
+    /// </summary>
     public class RequestLoggingMiddleware
     {
         private readonly RequestDelegate _next;
@@ -14,37 +18,37 @@ namespace AuthenticationforTheMemeoryGame.Middlewares
 
         public async Task Invoke(HttpContext context)
         {
-           
-            // 1. When requesting to enter (before entering the Controller) 
+            // 1. Start the timer to measure request processing duration
             var stopwatch = Stopwatch.StartNew();
-            _logger.LogInformation($"[Incoming] {context.Request.Method} {context.Request.Path}");
 
-            
-            // 2. Call the next middleware (hand over control to Auth, Controller, etc.) 
-            try
-            {
-                await _next(context);
-            }
-            catch (Exception ex)
-            {
-                // If there is an error in the subsequent process, it can also be captured and recorded here.
-                _logger.LogError(ex, "An error occurred while processing the request.");
-                throw; // Continue to throw the exception, do not swallow it
-            }
+            // 2. Log the incoming request method and path
+            _logger.LogInformation("[Incoming] {Method} {Path}", context.Request.Method, context.Request.Path);
 
-             
-            // 3. When the request processing is completed (after the Controller has executed) 
+            // 3. Call the next middleware in the pipeline
+            // Note: We do not use try-catch here. Exceptions are allowed to bubble up 
+            // to the GlobalExceptionMiddleware, which will handle them and set the 500 status code.
+            await _next(context);
+
+            // 4. Stop the timer after the pipeline returns
             stopwatch.Stop();
+            var elapsedMs = stopwatch.ElapsedMilliseconds;
             var statusCode = context.Response.StatusCode;
 
-            // Determine the log level based on the status code
-            if (statusCode >= 400)
+            // 5. Log the completion status with appropriate log levels
+            if (statusCode >= 500)
             {
-               _logger.LogWarning($"[Finished] Status: {statusCode} | Time: {stopwatch.ElapsedMilliseconds}ms");
+                // Log as Error for server-side issues
+                _logger.LogError("[Failed] Status: {StatusCode} | Time: {Elapsed}ms", statusCode, elapsedMs);
+            }
+            else if (statusCode >= 400)
+            {
+                // Log as Warning for client-side errors (e.g., 400 Bad Request, 401 Unauthorized)
+                _logger.LogWarning("[Client Error] Status: {StatusCode} | Time: {Elapsed}ms", statusCode, elapsedMs);
             }
             else
             {
-                _logger.LogInformation($"[Finished] Status: {statusCode} | Time: {stopwatch.ElapsedMilliseconds}ms");
+                // Log as Information for successful requests
+                _logger.LogInformation("[Finished] Status: {StatusCode} | Time: {Elapsed}ms", statusCode, elapsedMs);
             }
         }
     }

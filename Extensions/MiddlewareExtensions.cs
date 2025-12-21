@@ -8,5 +8,9 @@ namespace AuthenticationforTheMemeoryGame.Extensions
         {
             return builder.UseMiddleware<RequestLoggingMiddleware>();
         }
+        public static IApplicationBuilder UseGlobalExceptionHandler(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<GlobalExceptionMiddleware>();
+        }
     }
 }
