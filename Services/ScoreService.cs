@@ -14,7 +14,7 @@ namespace AuthenticationforTheMemeoryGame.Services
         {
             _dbcontext = dbcontext;
         }
-        public async Task<bool> SubmitScoreAsync(int userId,ScoreSubmitRequestDto request)
+        public async Task SubmitScoreAsync(int userId, ScoreSubmitRequestDto request)
         {
             var score = new Score
             {
@@ -23,13 +23,13 @@ namespace AuthenticationforTheMemeoryGame.Services
                 CompleteAt = DateTime.Now
             };
             _dbcontext.Scores.Add(score);
-            var result = await _dbcontext.SaveChangesAsync();
-            return result > 0;
+            await _dbcontext.SaveChangesAsync();
+
         }
 
         public async Task<PageResult<LeaderboardResponseDto>> GetLeaderboardAsync(int page, int size)
         {
-            
+
             var query = _dbcontext.Scores.AsQueryable();
 
             var totalCount = await query.CountAsync();
@@ -38,10 +38,10 @@ namespace AuthenticationforTheMemeoryGame.Services
 
             var items = await query
                 .Include(s => s.User)
-                .OrderBy(s => s.CompletionTimeSeconds) 
-                .ThenBy(s => s.CompleteAt)             
-                .Skip(skipAmount)                      
-                .Take(size)                           
+                .OrderBy(s => s.CompletionTimeSeconds)
+                .ThenBy(s => s.CompleteAt)
+                .Skip(skipAmount)
+                .Take(size)
                 .Select(s => new LeaderboardResponseDto
                 {
                     Username = s.User.Username,
@@ -50,7 +50,7 @@ namespace AuthenticationforTheMemeoryGame.Services
                 })
                 .ToListAsync();
 
-  
+
             return new PageResult<LeaderboardResponseDto>
             {
                 Items = items,
@@ -58,23 +58,6 @@ namespace AuthenticationforTheMemeoryGame.Services
                 PageNumber = page,
                 PageSize = size
             };
-        }
-        public async Task<List<LeaderboardResponseDto>> GetLeaderboardAsync(int topN)
-        {
-            var leaderboard = await _dbcontext.Scores
-                .Include(s => s.User)
-                .OrderBy(s => s.CompletionTimeSeconds)
-                .ThenBy(s => s.CompleteAt)
-                .Take(topN)
-                .Select(s => new LeaderboardResponseDto
-                {
-                    Username = s.User.Username,
-                    CompleteTimeSeconds = s.CompletionTimeSeconds,
-                    CompleteAt = s.CompleteAt
-                })
-                .ToListAsync();
-
-            return leaderboard;
         }
     }
 }

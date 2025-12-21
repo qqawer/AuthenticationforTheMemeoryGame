@@ -1,4 +1,6 @@
-﻿using AuthenticationforTheMemeoryGame.DTOs.Scores;
+﻿using AuthenticationforTheMemeoryGame.DTOs;
+using AuthenticationforTheMemeoryGame.DTOs.Scores;
+using AuthenticationforTheMemeoryGame.DTOs.Shared;
 using AuthenticationforTheMemeoryGame.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -22,17 +24,22 @@ namespace AuthenticationforTheMemeoryGame.Controllers
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");//User.FindFirst("UserId");
             if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
             {
-                return Unauthorized(new { Message = "Invalid user token." });
+                // Return 401 wrapped in ApiResponse
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Code = 401,
+                    Message = "Invalid user token.",
+                    Data = null
+                });
             }
-            var result = await _scoreService.SubmitScoreAsync(userId, request);
-            if (result)
+            await _scoreService.SubmitScoreAsync(userId, request);
+
+            return Ok(new ApiResponse<object>
             {
-                return Ok(new { Message = "Score submitted successfully." });
-            }
-            else
-            {
-                return StatusCode(500, new { Message = "Failed to submit score." });
-            }
+                Code = 200,
+                Message = "Score submitted successfully.",
+                Data = null
+            });
         }
         // GET: /api/scores/leaderboard?page=1&size=10
         [HttpGet("leaderboard")]
@@ -46,7 +53,12 @@ namespace AuthenticationforTheMemeoryGame.Controllers
 
             var result = await _scoreService.GetLeaderboardAsync(page, size);
 
-            return Ok(result);
+            return Ok(new ApiResponse<PageResult<LeaderboardResponseDto>>
+            {
+                Code = 200,
+                Message = "Leaderboard retrieved successfully.",
+                Data = result
+            });
         }
     }
 }
