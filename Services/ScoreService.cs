@@ -1,12 +1,13 @@
 ﻿using AuthenticationforTheMemeoryGame.Data;
 using AuthenticationforTheMemeoryGame.DTOs.Scores;
 using AuthenticationforTheMemeoryGame.DTOs.Shared;
+using AuthenticationforTheMemeoryGame.Interfaces;
 using AuthenticationforTheMemeoryGame.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthenticationforTheMemeoryGame.Services
 {
-    public class ScoreService
+    public class ScoreService : IScoreService
     {
         private readonly AppDbContext _dbcontext;
         public ScoreService(AppDbContext dbcontext)
@@ -26,7 +27,7 @@ namespace AuthenticationforTheMemeoryGame.Services
             return result > 0;
         }
 
-        public async Task<PagedResult<LeaderboardResponseDto>> GetLeaderboardAsync(int page, int size)
+        public async Task<PageResult<LeaderboardResponseDto>> GetLeaderboardAsync(int page, int size)
         {
             
             var query = _dbcontext.Scores.AsQueryable();
@@ -50,7 +51,7 @@ namespace AuthenticationforTheMemeoryGame.Services
                 .ToListAsync();
 
   
-            return new PagedResult<LeaderboardResponseDto>
+            return new PageResult<LeaderboardResponseDto>
             {
                 Items = items,
                 TotalCount = totalCount,

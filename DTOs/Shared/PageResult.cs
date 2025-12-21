@@ -1,7 +1,7 @@
 ﻿namespace AuthenticationforTheMemeoryGame.DTOs.Shared
 {
   
-    public class PagedResult<T>
+    public class PageResult<T>
     {
         public List<T> Items { get; set; } = new List<T>(); 
         public int TotalCount { get; set; }      
