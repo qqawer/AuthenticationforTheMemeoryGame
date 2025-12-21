@@ -42,6 +42,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAdService, AdService>();
 builder.Services.AddScoped<ITokenService,TokenService>();
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
