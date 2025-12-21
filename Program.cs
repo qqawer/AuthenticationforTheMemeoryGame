@@ -47,6 +47,7 @@ builder.Services.AddScoped<ITokenService,TokenService>();
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
@@ -63,6 +64,8 @@ app.UseGlobalExceptionHandler();
 app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
+
+app.UseStaticFiles();
 
 app.UseAuthentication();//check Token
 app.UseAuthorization();
