@@ -8,9 +8,12 @@ namespace AuthenticationforTheMemeoryGame.Services
     public class AuthService : IAuthService
     {
         private readonly AppDbContext _dbContext;
-        public AuthService(AppDbContext dbContext)
+        private readonly ITokenService _tokenService;
+        public AuthService(AppDbContext dbContext,ITokenService tokenService)
         {
             _dbContext = dbContext;
+            _tokenService = tokenService;
+
         }
         public async Task<LoginResponseDto> LoginAsync(LoginRequestDto loginRequest)
         {
@@ -34,12 +37,12 @@ namespace AuthenticationforTheMemeoryGame.Services
                     Message = "Invalid username or password"
                 };
             }
+            var token=_tokenService.GenerateToken(user);
             return new LoginResponseDto
             {
                 IsSuccess = true,
                 Message = "Login successful",
-                UserId = user.Id,
-                IsPaid = user.IsPaid
+                Token = token
             };
         }
     }
