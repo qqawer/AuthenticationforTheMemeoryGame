@@ -61,7 +61,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseRequestLogging();
 app.UseGlobalExceptionHandler();
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
 
