@@ -157,35 +157,15 @@ GET /Score/leaderboard
       {
         "username": "user",
         "completeTimeSeconds": 95,
-        "completeAt": "2025-12-20T23:02:24.373"
-      },
-      {
-        "username": "user",
-        "completeTimeSeconds": 110,
-        "completeAt": "2025-12-20T22:52:24.373"
-      },
-      {
-        "username": "user",
-        "completeTimeSeconds": 120,
         "completeAt": "2025-12-20T22:32:24.373"
       },
       {
         "username": "user1",
         "completeTimeSeconds": 200,
         "completeAt": "2025-12-19T23:02:24.373"
-      },
-      {
-        "username": "user",
-        "completeTimeSeconds": 2147483647,
-        "completeAt": "2025-12-21T22:36:36.143"
-      },
-      {
-        "username": "user",
-        "completeTimeSeconds": 2147483647,
-        "completeAt": "2025-12-21T23:56:41.913"
       }
     ],
-    "totalCount": 7,
+    "totalCount": 3,
     "pageNumber": 1,
     "pageSize": 10,
     "totalPages": 1
