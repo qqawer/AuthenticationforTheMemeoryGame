@@ -29,25 +29,27 @@ namespace AuthenticationforTheMemeoryGame.Services
 
         public async Task<PageResult<LeaderboardResponseDto>> GetLeaderboardAsync(int page, int size)
         {
-
-            var query = _dbcontext.Scores.AsQueryable();
+            //Groupby UserId
+            var query = _dbcontext.Scores
+            .GroupBy(s => new { s.UserId, s.User.Username })
+            .Select(g => new LeaderboardResponseDto
+            {
+                  Username = g.Key.Username,
+                // get best completion time per user
+                    CompleteTimeSeconds = g.Min(s => s.CompletionTimeSeconds),
+              // use the earliest completion time for tie-breaking
+                  CompleteAt = g.Min(s => s.CompleteAt)
+            });
 
             var totalCount = await query.CountAsync();
 
             var skipAmount = (page - 1) * size;
 
             var items = await query
-                .Include(s => s.User)
-                .OrderBy(s => s.CompletionTimeSeconds)
+                .OrderBy(s => s.CompleteTimeSeconds)
                 .ThenBy(s => s.CompleteAt)
                 .Skip(skipAmount)
                 .Take(size)
-                .Select(s => new LeaderboardResponseDto
-                {
-                    Username = s.User.Username,
-                    CompleteTimeSeconds = s.CompletionTimeSeconds,
-                    CompleteAt = s.CompleteAt
-                })
                 .ToListAsync();
 
 
