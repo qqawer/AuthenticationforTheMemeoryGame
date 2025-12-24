@@ -10,10 +10,10 @@ namespace AuthenticationforTheMemeoryGame.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ScoresController : ControllerBase
+    public class ScoreController : ControllerBase
     {
         private readonly IScoreService _scoreService;
-        public ScoresController(IScoreService scoreService)
+        public ScoreController(IScoreService scoreService)
         {
             _scoreService = scoreService;
         }
