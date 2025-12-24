@@ -130,7 +130,7 @@ HTTP Status Code **200**
 
 ## GET Getleaderboard
 
-GET /Scores/leaderboard
+GET /Score/leaderboard
 
 ### Params
 
