@@ -118,10 +118,10 @@ BEGIN
 
     INSERT INTO [dbo].[Ads] ([Id], [AdImageUrl], [AdTitle], [IsActive])
     VALUES 
-    (1, '/images/ads/ad1.png', 'dog1', 1),
-    (2, '/images/ads/ad2.png', 'dog2', 1),
-    (3, '/images/ads/ad3.png', 'dog3', 1), -- 这是一个在线占位图，没本地图也能显示
-    (4, '/images/ads/ad4.png', 'dog4', 0);            -- IsActive=0，测试不显示过期的广告
+    (1, '/images/ads/ad1.png', 'ad1', 1),
+    (2, '/images/ads/ad2.png', 'ad2', 1),
+    (3, '/images/ads/ad3.png', 'ad3', 1), -- 这是一个在线占位图，没本地图也能显示
+    (4, '/images/ads/ad4.png', 'ad4', 0);            -- IsActive=0，测试不显示过期的广告
 
     SET IDENTITY_INSERT [dbo].[Ads] OFF;
 END
