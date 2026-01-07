@@ -1,16 +1,39 @@
 ﻿using AuthenticationforTheMemeoryGame.Configurations;
 using AuthenticationforTheMemeoryGame.Data;
+using AuthenticationforTheMemeoryGame.DTOs;
 using AuthenticationforTheMemeoryGame.Extensions;
 using AuthenticationforTheMemeoryGame.Interfaces;
 using AuthenticationforTheMemeoryGame.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var errorMessages = context.ModelState
+                .Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .Aggregate((current, next) => $"{current}; {next}");
+
+            var response = new ApiResponse<object>
+            {
+                Code = (int)HttpStatusCode.BadRequest,
+                Message = errorMessages,
+                Data = null
+            };
+
+            return new BadRequestObjectResult(response);
+        };
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
